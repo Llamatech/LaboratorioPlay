@@ -5,8 +5,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "wishlistentity")
-public class WishListEntity {
-    public static Model.Finder<Long, WishListEntity> FINDER = new Model.Finder<>(WishListEntity.class);
+
+public class WishListEntity extends Model
+{
+    public static Model.Finder<Long,WishListEntity> FINDER = new Model.Finder<>(WishListEntity.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WishList")
