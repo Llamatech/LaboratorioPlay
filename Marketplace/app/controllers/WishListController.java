@@ -33,6 +33,22 @@ public class WishListController extends Controller
                 );
     }
 
+    public CompletionStage<Result> getWishList(Long id) {
+        MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
+
+        return CompletableFuture.
+                supplyAsync(
+                        () -> {
+                            return WishListEntity.FINDER.byId(id);
+                        }
+                        ,jdbcDispatcher)
+                .thenApply(
+                        wishListEnt -> {
+                            return ok(toJson(wishListEnt));
+                        }
+                );
+    }
+
     public CompletionStage<Result> createWishList()
     {
         MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
@@ -52,4 +68,40 @@ public class WishListController extends Controller
                 );
     }
 
+    public CompletionStage<Result> updateWishList()
+    {
+        MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
+        JsonNode nWishList = request().body().asJson();
+        WishListEntity wishList = Json.fromJson( nWishList , WishListEntity.class );
+        return CompletableFuture.
+                supplyAsync(
+                        () -> {
+                            wishList.update();
+                            return wishList;
+                        }
+                        ,jdbcDispatcher)
+                .thenApply(
+                        productEntities -> {
+                            return ok(toJson(productEntities));
+                        }
+                );
+    }
+
+    public CompletionStage<Result> deleteWishList(Long id)
+    {
+        MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
+        return CompletableFuture.
+                supplyAsync(
+                        () -> {
+                            WishListEntity wishList = WishListEntity.FINDER.byId(id);
+                            wishList.update();
+                            return wishList;
+                        }
+                        ,jdbcDispatcher)
+                .thenApply(
+                        productEntities -> {
+                            return ok(toJson(productEntities));
+                        }
+                );
+    }    
 }

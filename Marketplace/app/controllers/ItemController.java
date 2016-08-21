@@ -33,6 +33,23 @@ public class ItemController extends Controller
                 );
 	}
 
+	public CompletionStage<Result> getItem(Long id) 
+	{
+		MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
+
+	    return CompletableFuture.
+                supplyAsync(
+                        () -> {
+                            return ItemEntity.FINDER.byId(id);
+                        }
+                        ,jdbcDispatcher)
+                .thenApply(
+                        items -> {
+                            return ok(toJson(items));
+                        }
+                );
+	}
+
 	public CompletionStage<Result> createItem()
     {
         MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
@@ -52,4 +69,40 @@ public class ItemController extends Controller
                 );
     }
 
+    public CompletionStage<Result> updateItem()
+    {
+        MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
+        JsonNode nItem = request().body().asJson();
+        ItemEntity item = Json.fromJson( nItem , ItemEntity.class );
+        return CompletableFuture.
+                supplyAsync(
+                        () -> {
+                            item.update();
+                            return item;
+                        }
+                        ,jdbcDispatcher)
+                .thenApply(
+                        itemEntities -> {
+                            return ok(toJson(itemEntities));
+                        }
+                );
+    }
+
+	public CompletionStage<Result> deleteItem(Long id)
+    {
+        MessageDispatcher jdbcDispatcher = AkkaDispatcher.jdbcDispatcher;
+        return CompletableFuture.
+                supplyAsync(
+                        () -> {
+                        	ItemEntity item = ItemEntity.FINDER.byId(id);
+                            item.delete();
+                            return item;
+                        }
+                        ,jdbcDispatcher)
+                .thenApply(
+                        itemEntities -> {
+                            return ok(toJson(itemEntities));
+                        }
+                );
+    }	    
 }
