@@ -1,33 +1,33 @@
 package models;
-
 import com.avaje.ebean.Model;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "wishlistentity")
+
 public class WishListEntity extends Model
 {
     public static Model.Finder<Long,WishListEntity> FINDER = new Model.Finder<>(WishListEntity.class);
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "WishList")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WishList")
     private Long id;
     private String username;
 
-    public WishListEntity(){
+    public WishListEntity() {
         id = null;
         username = "NONE";
     }
 
-    public WishListEntity(Long id,String username) {
-        this.id=id;
+    public WishListEntity(Long id, String username) {
+        this.id = id;
         this.username = username;
     }
 
-    public WishListEntity(Long id){
+    public WishListEntity(Long id) {
         this();
-        this.id=id;
+        this.id = id;
     }
 
     public Long getId() {
