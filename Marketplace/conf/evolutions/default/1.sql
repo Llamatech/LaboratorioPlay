@@ -5,8 +5,8 @@
 
 create table itementity (
   id                        bigint not null,
-  product_id                bigint,
-  wishlist_id               bigint,
+  product_id                bigint not null,
+  wish_list_id              bigint not null,
   quantity                  integer,
   constraint pk_itementity primary key (id))
 ;
@@ -32,6 +32,10 @@ create sequence Product;
 
 create sequence WishList;
 
+alter table itementity add constraint fk_itementity_product_1 foreign key (product_id) references productentity (id);
+create index ix_itementity_product_1 on itementity (product_id);
+alter table itementity add constraint fk_itementity_wishList_2 foreign key (wish_list_id) references wishlistentity (id);
+create index ix_itementity_wishList_2 on itementity (wish_list_id);
 
 
 

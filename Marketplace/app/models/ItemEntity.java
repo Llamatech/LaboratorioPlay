@@ -3,6 +3,7 @@ package models;
 import com.avaje.ebean.Model;
 
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Entity
@@ -13,22 +14,28 @@ public class ItemEntity extends Model{
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "Item")
     private Long id;
-    private Long product_id;
-    private Long wishlist_id;
+    
+    @ManyToOne(optional=false)
+    private ProductEntity product;
+
+    @ManyToOne(optional=false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private WishListEntity wishList;
+
     private int quantity;
 
     public ItemEntity(){
         this.id=null;
-        this.product_id = null;
-        this.wishlist_id=null;
+        this.wishList = null;
+        this.product = null;
         this.quantity=0;
     }
 
-    public ItemEntity(Long id,Long product_id, Long wishlist_id, int quantity) {
+    public ItemEntity(Long id, int quantity, WishListEntity wishList, ProductEntity product) {
         this.id = id;
-        this.product_id = product_id;
-        this.wishlist_id = wishlist_id;
         this.quantity = quantity;
+        this.wishList = wishList;
+        this.product = product;
     }
 
     public Long getId() {
@@ -39,20 +46,12 @@ public class ItemEntity extends Model{
         this.id = id;
     }
 
-    public Long getProduct_id() {
-        return product_id;
+    public ProductEntity getProduct() {
+        return product;
     }
 
-    public void setProduct_id(Long product_id) {
-        this.product_id = product_id;
-    }
-
-    public Long getWishlist_id() {
-        return wishlist_id;
-    }
-
-    public void setWishlist_id(Long wishlist_id) {
-        this.wishlist_id = wishlist_id;
+    public void setProduct(ProductEntity product) {
+        this.product = product;
     }
 
     public int getQuantity() {
@@ -63,12 +62,22 @@ public class ItemEntity extends Model{
         this.quantity = quantity;
     }
 
+    public void setWishList(WishListEntity wishList)
+    {
+        this.wishList = wishList;
+    }
+
+    public WishListEntity getWishList()
+    {
+        return wishList;
+    }
+
+
     @Override
     public String toString() {
         return "ItemEntity{" +
                 "id=" + id +
-                ", product id='" + product_id + '\'' +
-                ", wishlist_id=" + wishlist_id +
+                ", product id='" + product + '\'' +
                 ", quantity=" + quantity +
                 '}';
     }

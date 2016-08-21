@@ -2,6 +2,7 @@ package models;
 import com.avaje.ebean.Model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "wishlistentity")
@@ -15,14 +16,19 @@ public class WishListEntity extends Model
     private Long id;
     private String username;
 
+    @OneToMany(mappedBy="wishList")
+    private List<ItemEntity> items;
+
+
     public WishListEntity() {
         id = null;
         username = "NONE";
     }
 
-    public WishListEntity(Long id, String username) {
+    public WishListEntity(Long id, List<ItemEntity> items, String username) {
         this.id = id;
         this.username = username;
+        this.items = items;
     }
 
     public WishListEntity(Long id) {
@@ -44,6 +50,16 @@ public class WishListEntity extends Model
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void addItem(ItemEntity item)
+    {
+        items.add(item);
+    }
+
+    public List<ItemEntity> getItems()
+    {
+        return items;
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import play.mvc.*;
 import static play.libs.Json.toJson;
 import models.ItemEntity;
+import models.WishListEntity;
 import akka.dispatch.MessageDispatcher;
 
 import java.util.concurrent.CompletionStage;
@@ -58,6 +59,9 @@ public class ItemController extends Controller
         return CompletableFuture.
                 supplyAsync(
                         () -> {
+                        	WishListEntity wishList = item.getWishList();
+                        	wishList = WishListEntity.FINDER.byId(wishList.getId());
+                            wishList.addItem(item);
                             item.save();
                             return item;
                         }
